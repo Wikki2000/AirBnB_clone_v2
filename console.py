@@ -6,8 +6,8 @@ from datetime import datetime
 from models.base_model import BaseModel
 from models.state import State
 from models.city import City
-"""
 from models.user import User
+"""
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
@@ -20,7 +20,7 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
     all_classes = {"BaseModel": BaseModel, "State": State,
-                    "City": City}
+            "City": City, "User": User}
 
     def emptyline(self):
         """Ignores empty spaces"""
