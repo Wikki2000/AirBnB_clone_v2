@@ -6,9 +6,9 @@ from models.city import City
 from models.state import State
 from models.user import User
 from models.place import Place
+from models.review import Review
 """
 from models.amenity import Amenity
-from models.review import Review
 """
 
 class FileStorage:
@@ -22,7 +22,7 @@ class FileStorage:
     __objects = {}
     all_classes = {'BaseModel': BaseModel, 'State': State,
                     'City': City, 'User': User,
-                    'Place': Place}
+                    'Place': Place, "Review": Review}
 
     def all(self, cls=None):
         """returns a dictionary
