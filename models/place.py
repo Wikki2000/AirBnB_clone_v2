@@ -36,3 +36,15 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
+    if environ['HBNB_TYPE_STORAGE'] == 'db':
+        reviews = relationship('Review', cascade='all, delete', backref='place')
+    else:
+        @property
+        def reviews(self):
+            """ getter returns list of reviews """
+            list_of_reviews = []
+            all_reviews = models.strage.all(Review)
+            for review in all_reviews.values():
+                if review.place_id == self.id:
+                    list_of_reviews.append(review)
+            return list_of_reviews
