@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
 # sets up a web server for the deployment of web_static projects
 
 # Install Nginx if it not already installed
