@@ -1,17 +1,29 @@
-#!/usr/bin/python3
+#!/usr/bin/env bash
 # sets up a web server for the deployment of web_static projects
 
 # Install Nginx if it not already installed
-apt-get update
-apt-get install -y nginx
+if [ ! -e /usr/sbin/nginx ]; then
+        apt-get update
+        apt-get -y install nginx
+        echo "Nginx installed successfully."
+else
+        echo "Nginx is already installed."
+fi
 
 # Create the folder /data/web_static/releases/test/ and parent folders
-mkdir -p /data/web_static/releases/test/
-mkdir -p /data/web_static/shared/
+if [ ! -e /data/web_static/releases/test ]; then
+	mkdir -p /data/web_static/releases/test/
+fi
+
+# Create the folder /data/web_static/shared/ and parent folders
+if [! -e /data/web_static/shared/ ]; then
+	mkdir -p /data/web_static/shared/
+fi
+
 echo "Hello World!" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# change onwerships and group
+#  change the ownership for the specified directory and all of its subdirectories and files.
 chown -R ubuntu /data/
 chgrp -R ubuntu /data/
 
