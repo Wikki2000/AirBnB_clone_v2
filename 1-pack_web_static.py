@@ -10,13 +10,14 @@ def do_pack():
 
     Return: path to archive on success; None on fail
     """
-    # Get current time and create archive path
-    now = datetime.now().strftime('%Y%m%d%H%M%S')
-    archive_path = f'versions/web_static_{now}.tgz'
+    # Get current time
+    now = datetime.now()
+    now = now.strftime('%Y%m%d%H%M%S')
+    archive_path = 'versions/web_static_' + now + '.tgz'
 
     # Create archive
     local('mkdir -p versions/')
-    result = local(f'tar -cvzf {archive_path} web_static/')
+    result = local('tar -cvzf {} web_static/'.format(archive_path))
 
     # Check if archiving was successful
     if result.succeeded:
