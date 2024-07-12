@@ -23,3 +23,11 @@ def do_pack():
     if result.succeeded:
         return archive_path
     return None
+"""
+Uncomment out if u want to run with python3 <file_name>
+archive_path = do_pack()
+if archive_path:
+    print(f"Archive created at: {archive_path}")
+else:
+    print("Failed to create archive")
+"""
