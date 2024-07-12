@@ -7,7 +7,7 @@ from datetime import datetime
 
 def do_pack():
     """Function to compress directory
-    Usage: fab -f 1-pack_web_static.py do_pack 
+    Usage: fab -f 1-pack_web_static.py do_pack
     Return: path to archive on success; None on fail
     """
     # Get current time and create archive path
@@ -22,6 +22,8 @@ def do_pack():
     if result.succeeded:
         return archive_path
     return None
+
+
 """
 Uncomment out if u want to run with python3 <file_name>
 archive_path = do_pack()
