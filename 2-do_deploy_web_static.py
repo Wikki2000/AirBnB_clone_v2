@@ -1,56 +1,47 @@
 #!/usr/bin/python3
-"""Compress web static package
-"""
+""" do_deploy_web_static module """
 from fabric.api import *
-from datetime import datetime
-from os import path
-
-
-env.hosts = ['18.209.20.255', '34.73.76.135']
-env.user = 'ubuntu'
-env.key_filename = '~/.ssh/id_rsa'
+from os.path import exists
+env.hosts = ['100.26.215.136', '100.26.20.75']
 
 
 def do_deploy(archive_path):
-        """Deploy web files to server
-        """
-        try:
-                if not (path.exists(archive_path)):
-                        return False
+    """deply filr to server
+    Args:
+        archive_path: path of the file.
+    Returns:
+        False if fail or filr not exists otherwise True.
+    """
+    if not exists(archive_path):
+        return False
 
-                # upload archive
-                put(archive_path, '/tmp/')
-
-                # create target dir
-                timestamp = archive_path[-18:-4]
-                run('sudo mkdir -p /data/web_static/\
-releases/web_static_{}/'.format(timestamp))
-
-                # uncompress archive and delete .tgz
-                run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
-/data/web_static/releases/web_static_{}/'
-                    .format(timestamp, timestamp))
-
-                # remove archive
-                run('sudo rm /tmp/web_static_{}.tgz'.format(timestamp))
-
-                # move contents into host web_static
-                run('sudo mv /data/web_static/releases/web_static_{}/web_static/* \
-/data/web_static/releases/web_static_{}/'.format(timestamp, timestamp))
-
-                # remove extraneous web_static dir
-                run('sudo rm -rf /data/web_static/releases/\
-web_static_{}/web_static'
-                    .format(timestamp))
-
-                # delete pre-existing sym link
-                run('sudo rm -rf /data/web_static/current')
-
-                # re-establish symbolic link
-                run('sudo ln -s /data/web_static/releases/\
-web_static_{}/ /data/web_static/current'.format(timestamp))
-        except:
-                return False
-
-        # return True on success
-        return True
+    sPath = archive_path.replace("versions", "/tmp")
+    r = put(archive_path, sPath)
+    if r.failed:
+        return False
+    fName = sPath.split('/')[-1].split('.')[0]
+    fPath = "/data/web_static/releases/{}".format(fName)
+    r = run("mkdir -p {}".format(fPath))
+    if r.failed:
+        return False
+    r = run("tar -xzf {} -C {}/".format(sPath, fPath))
+    if r.failed:
+        return False
+    r = run("rm {}".format(sPath))
+    if r.failed:
+        return False
+    sPath = fPath
+    r = run("mv {}/web_static/* /data/web_static/releases/{}/".
+            format(sPath, fName))
+    if r.failed:
+        return False
+    r = run("rm -rf {}/web_static".format(sPath))
+    if r.failed:
+        return False
+    r = run("rm -rf /data/web_static/current")
+    if r.failed:
+        return False
+    r = run("ln -s {}/ /data/web_static/current".format(fPath))
+    if r.failed:
+        return False
+    return True
