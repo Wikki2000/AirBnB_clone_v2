@@ -43,7 +43,7 @@ class Place(BaseModel, Base):
     else:
         @property
         def reviews(self):
-            """ getter returns list of reviews """
+            """getter returns list of reviews"""
             list_of_reviews = []
             all_reviews = models.strage.all(Review)
             for review in all_reviews.values():

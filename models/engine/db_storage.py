@@ -13,13 +13,12 @@ from sqlalchemy.orm.session import sessionmaker, Session
 from os import getenv
 
 all_classes = {'State': State, 'City': City,
-                'User': User, 'Place': Place,
-                'Review': Review}
+               'User': User, 'Place': Place,
+               'Review': Review}
 
 
 class DBStorage:
-    """This class manages MySQL storage using SQLAlchemy
-
+    """
     Attributes:
         __engine: engine object
         __session: session object
@@ -53,8 +52,8 @@ class DBStorage:
                 obj_dict.update({'{}.{}'.
                                 format(type(cls).__name__, row.id,): row})
         else:
-            for key, val in all_classes.items():
-                for row in self.__session.query(val):
+            for cls in all_classes.values():
+                for row in self.__session.query(cls):
                     obj_dict.update({'{}.{}'.
                                     format(type(row).__name__, row.id,): row})
         return obj_dict
@@ -69,6 +68,12 @@ class DBStorage:
         """
         self.__session.commit()
 
+    def get_by_id(self, cls, id):
+        """Retrieved an object by id.
+        """
+        obj = self.__session.query(cls).filter_by(id=id).first()
+        return obj
+
     def delete(self, obj=None):
         """Delete obj from database session
         """
@@ -81,7 +86,7 @@ class DBStorage:
                 filter(cls_name.id == obj.id).delete()
 
     def reload(self):
-        """Create database session
+        """Create database session and all map tables.
         """
         # create session from current engine
         Base.metadata.create_all(self.__engine)
